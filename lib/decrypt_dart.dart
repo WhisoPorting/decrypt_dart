@@ -1,4 +1,6 @@
 import 'package:args/args.dart';
+import 'package:decrypt_dart/decode.dart';
+import 'package:decrypt_dart/encode.dart';
 
 ArgResults? getParseCommand(List<String> arguments) {
   final parser = ArgParser()
@@ -6,14 +8,6 @@ ArgResults? getParseCommand(List<String> arguments) {
     ..addCommand('decode');
   ArgResults argResults = parser.parse(arguments);
   return argResults.command;
-}
-
-int encoding(ArgResults command) {
-  return 0;
-}
-
-int decoding(ArgResults command) {
-  return 0;
 }
 
 int invalid(ArgResults command) {
