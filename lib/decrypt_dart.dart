@@ -17,7 +17,8 @@ int decoding(ArgResults command) {
 }
 
 int invalid(ArgResults command) {
-  print('Invalid command');
+  print('Error: Invalid arguments');
+  print('Usage: encode|decode inputFile|folder');
   return 0;
 }
 
