@@ -1,18 +1,18 @@
 import 'package:args/args.dart';
 import 'package:decrypt_dart/utils.dart';
 
-int decoding(ArgResults command) {
+Future<int> decoding(ArgResults command) async {
   if (command.rest.isEmpty || command.rest.first.trim().isEmpty) {
     print('Error: Invalid arguments: missing path or file argument');
     print('Usage: decode inputFile|inputFolder');
-    return -1;
+    return Future.value(-1);
   }
   final currentPath = command.rest.first.trim();
   final files = getFilesRecursively(currentPath);
   if (files.isEmpty) {
     print('Error: Current path is no valid or path is empty');
     print('Usage: decode inputFile|inputFolder');
-    return -1;
+    return Future.value(-1);
   }
 
   for (final fileName in files) {
@@ -22,7 +22,7 @@ int decoding(ArgResults command) {
 
     if (!createDirIfNotExists(outputFolderName)) {
       print('Error: Could not create working path $outputFolderName');
-      return -1;
+      return Future.value(0);
     }
 
     final outputFileName = joinPath(outputFolderName, outputBaseName);
@@ -30,5 +30,5 @@ int decoding(ArgResults command) {
     writeFile(outputFileName, encryptData);
   }
 
-  return 0;
+  return Future.value(0);
 }

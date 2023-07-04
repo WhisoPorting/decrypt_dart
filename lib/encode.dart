@@ -1,18 +1,18 @@
 import 'package:args/args.dart';
 import 'package:decrypt_dart/utils.dart';
 
-int encoding(ArgResults command) {
+Future<int> encoding(ArgResults command) async {
   if (command.rest.isEmpty || command.rest.first.trim().isEmpty) {
     print('Error: Invalid arguments: missing path or file argument');
     print('Usage: encode inputFile|inputFolder');
-    return -1;
+    return Future.value(-1);
   }
   final currentPath = command.rest.first.trim();
   final files = getFilesRecursively(currentPath);
   if (files.isEmpty) {
     print('Error: Current path is no valid or path is empty');
     print('Usage: encode inputFile|inputFolder');
-    return -1;
+    return Future.value(-1);
   }
   final theme = Theme.colorfulTheme;
   for (final fileName in files) {
@@ -22,7 +22,7 @@ int encoding(ArgResults command) {
       rightPrompt: (done) =>
           done ? 'Finish encoding $fileName' : 'Encoding $fileName',
     ).interact();
-
+    await Future.delayed(Duration(milliseconds: 500));
     final outputDirName = getDirName(fileName);
     final outputBaseName = getBaseName(fileName);
     final outputFolderName = joinPath(outputDirName, 'encrypt');
@@ -30,14 +30,14 @@ int encoding(ArgResults command) {
     if (!createDirIfNotExists(outputFolderName)) {
       print('Error: Could not create working path $outputFolderName');
       progress.done();
-      return -1;
+      return Future.value(-1);
     }
 
     final outputFileName = joinPath(outputFolderName, outputBaseName);
     final encryptData = encryptFile(fileName);
-    writeFile(outputFileName, encryptData);
+    await writeFile(outputFileName, encryptData);
     progress.done();
   }
 
-  return 0;
+  return Future.value(0);
 }

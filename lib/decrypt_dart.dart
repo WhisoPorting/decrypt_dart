@@ -10,13 +10,13 @@ ArgResults? getParseCommand(List<String> arguments) {
   return argResults.command;
 }
 
-int invalid(ArgResults command) {
+Future<int> invalid(ArgResults command) {
   print('Error: Invalid arguments');
   print('Usage: encode|decode inputFile|folder');
-  return 0;
+  return Future.value(-1);
 }
 
-int Function(ArgResults command) processingCommand(ArgResults command) {
+Future<int> Function(ArgResults command) processingCommand(ArgResults command) {
   return switch (command.name) {
     'encode' => encoding,
     'decode' => decoding,
@@ -24,12 +24,12 @@ int Function(ArgResults command) processingCommand(ArgResults command) {
   };
 }
 
-int engine(List<String> arguments) {
+Future<int> engine(List<String> arguments) {
   final command = getParseCommand(arguments);
   if (command == null) {
     print('Error: Invalid arguments');
     print('Usage: encode|decode inputFile|folder');
-    return -1;
+    return Future.value(-1);
   }
   return processingCommand(command).call(command);
 }

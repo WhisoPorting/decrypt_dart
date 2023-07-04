@@ -57,12 +57,12 @@ bool createDirIfNotExists(String path) {
 }
 
 // This function takes a file path and a key as input and returns the encrypted data.
-Uint8List encryptFile(String filePath) {
+Future<Uint8List> encryptFile(String filePath) async {
   final keyData = enc.Key.fromUtf8(key);
 
   // Read the file data.
   final file = File(filePath);
-  final fileData = file.readAsBytesSync();
+  final fileData = await file.readAsBytes();
   // Create an encryption algorithm.
   var algorithm = enc.Encrypter(enc.AES(keyData, mode: enc.AESMode.cbc));
 
@@ -73,11 +73,11 @@ Uint8List encryptFile(String filePath) {
   );
 
   // Return the encrypted data.
-  return encryptedData.bytes;
+  return Future.value(encryptedData.bytes);
 }
 
 // This function takes a file path and a key as input and returns the encrypted data.
-Uint8List decryptFile(String filePath) {
+Future<Uint8List> decryptFile(String filePath) async {
   final keyData = enc.Key.fromUtf8(key);
 
   // Read the file data.
@@ -93,12 +93,12 @@ Uint8List decryptFile(String filePath) {
   );
 
   // Return the encrypted data.
-  return Uint8List.fromList(encryptedData);
+  return Future<Uint8List>.value(Uint8List.fromList(encryptedData));
 }
 
-void writeFile(String fileName, Uint8List data) {
+Future<void> writeFile(String fileName, Future<Uint8List> data) async {
   final file = File(fileName);
-  file.writeAsBytesSync(data);
+  await file.writeAsBytes(await data);
 }
 
 // --------------------------------------------------------------
