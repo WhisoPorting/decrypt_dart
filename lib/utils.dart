@@ -89,7 +89,7 @@ Uint8List decryptFile(String filePath) {
   );
 
   // Return the encrypted data.
-  return encryptedData as Uint8List;
+  return Uint8List.fromList(encryptedData);
 }
 
 void writeFile(String fileName, Uint8List data) {
