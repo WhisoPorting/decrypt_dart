@@ -14,20 +14,29 @@ int encoding(ArgResults command) {
     print('Usage: encode inputFile|inputFolder');
     return -1;
   }
-
+  final theme = Theme.colorfulTheme;
   for (final fileName in files) {
+    final progress = Spinner.withTheme(
+      theme: theme,
+      icon: theme.successPrefix,
+      rightPrompt: (done) =>
+          done ? 'Finish encoding $fileName' : 'Encoding $fileName',
+    ).interact();
+
     final outputDirName = getDirName(fileName);
     final outputBaseName = getBaseName(fileName);
     final outputFolderName = joinPath(outputDirName, 'encrypt');
 
     if (!createDirIfNotExists(outputFolderName)) {
       print('Error: Could not create working path $outputFolderName');
+      progress.done();
       return -1;
     }
 
     final outputFileName = joinPath(outputFolderName, outputBaseName);
     final encryptData = encryptFile(fileName);
     writeFile(outputFileName, encryptData);
+    progress.done();
   }
 
   return 0;
