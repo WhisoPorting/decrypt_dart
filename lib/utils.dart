@@ -1,4 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:path/path.dart';
+import 'package:encrypt/encrypt.dart';
+
+import 'const.dart';
 
 // This function takes a path as input and returns an array of all files contained in that path, recursively.
 List<String> getFilesRecursively(String path) {
@@ -30,4 +35,65 @@ List<String> getFilesRecursively(String path) {
     // Return the results array.
     return files;
   }
+}
+
+String getDirName(String path) => dirname(path);
+String getBaseName(String path) => basename(path);
+String joinPath(String basePath, String path) => join(basePath, path);
+
+bool createDirIfNotExists(String path) {
+  Directory directory = Directory(path);
+  if (!directory.existsSync()) {
+    try {
+      directory.createSync();
+    } catch (_) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// This function takes a file path and a key as input and returns the encrypted data.
+Uint8List encryptFile(String filePath) {
+  final keyData = Key.fromUtf8(key);
+
+  // Read the file data.
+  final file = File(filePath);
+  final fileData = file.readAsBytesSync();
+  // Create an encryption algorithm.
+  var algorithm = Encrypter(AES(keyData, mode: AESMode.cbc));
+
+  // Encrypt the data.
+  var encryptedData = algorithm.encryptBytes(
+    fileData,
+    iv: IV.fromUtf8('0123456789ABCDEF'),
+  );
+
+  // Return the encrypted data.
+  return encryptedData.bytes;
+}
+
+// This function takes a file path and a key as input and returns the encrypted data.
+Uint8List decryptFile(String filePath) {
+  final keyData = Key.fromUtf8(key);
+
+  // Read the file data.
+  File file = File(filePath);
+  final fileData = file.readAsBytesSync();
+  // Create an encryption algorithm.
+  var algorithm = Encrypter(AES(keyData, mode: AESMode.cbc));
+
+  // Encrypt the data.
+  final encryptedData = algorithm.decryptBytes(
+    Encrypted(fileData),
+    iv: IV.fromUtf8('0123456789ABCDEF'),
+  );
+
+  // Return the encrypted data.
+  return encryptedData as Uint8List;
+}
+
+void writeFile(String fileName, Uint8List data) {
+  final file = File(fileName);
+  file.writeAsBytesSync(data);
 }
