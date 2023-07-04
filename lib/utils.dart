@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:path/path.dart';
 import 'package:encrypt/encrypt.dart';
-
 import 'const.dart';
 
 // This function takes a path as input and returns an array of all files contained in that path, recursively.
