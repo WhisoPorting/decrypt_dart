@@ -14,20 +14,29 @@ Future<int> decoding(ArgResults command) async {
     print('Usage: decode inputFile|inputFolder');
     return Future.value(-1);
   }
-
+  final theme = Theme.colorfulTheme;
   for (final fileName in files) {
+    final progress = Spinner.withTheme(
+      theme: theme,
+      icon: theme.successPrefix,
+      rightPrompt: (done) =>
+          done ? 'Finish deconding $fileName' : 'Decoding $fileName',
+    ).interact();
+    await Future.delayed(Duration(milliseconds: 500));
     final outputDirName = getDirName(fileName);
     final outputBaseName = getBaseName(fileName);
     final outputFolderName = joinPath(outputDirName, 'decrypt');
 
     if (!createDirIfNotExists(outputFolderName)) {
       print('Error: Could not create working path $outputFolderName');
-      return Future.value(0);
+      progress.done();
+      return Future.value(-1);
     }
 
     final outputFileName = joinPath(outputFolderName, outputBaseName);
     final encryptData = decryptFile(fileName);
-    writeFile(outputFileName, encryptData);
+    await writeFile(outputFileName, encryptData);
+    progress.done();
   }
 
   return Future.value(0);
