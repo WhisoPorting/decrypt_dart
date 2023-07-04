@@ -761,7 +761,7 @@ class Confirm extends Component<bool> {
   final bool waitForNewLine;
 
   @override
-  _ConfirmState createState() => _ConfirmState();
+  createState() => _ConfirmState();
 }
 
 class _ConfirmState extends State<Confirm> {
@@ -878,7 +878,7 @@ class Spinner extends Component<SpinnerState> {
   final String Function(bool) rightPrompt;
 
   @override
-  _SpinnerState createState() => _SpinnerState();
+  createState() => _SpinnerState();
 
   @override
   void disposeState(State state) {}
